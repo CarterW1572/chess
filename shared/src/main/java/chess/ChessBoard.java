@@ -23,12 +23,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        /*if (position.getRow() >= 8 || position.getRow() < 0 || position.getColumn() >= 8 || position.getColumn() < 0) {
-            System.out.println(position.toString());
-            throw new IllegalArgumentException("Invalid position");
-        }*/
         squares[position.getRow()-1][position.getColumn()-1] = piece;
-        //throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -40,7 +35,6 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return squares[position.getRow()][position.getColumn()];
-        //throw new RuntimeException("Not implemented");
     }
 
     /**

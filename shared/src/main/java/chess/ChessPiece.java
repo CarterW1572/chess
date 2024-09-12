@@ -55,7 +55,22 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return new ArrayList<ChessMove>();
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        switch (getPieceType()) {
+            case KING:
+
+            case QUEEN:
+
+            case BISHOP:
+
+            case KNIGHT:
+
+            case ROOK:
+
+            case PAWN:
+
+        }
+        return moves;
         //throw new RuntimeException("Not implemented");
     }
 
