@@ -22,7 +22,6 @@ public class ChessPosition {
      */
     public int getRow() {
         return row;
-        //throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -31,6 +30,23 @@ public class ChessPosition {
      */
     public int getColumn() {
         return col;
-        //throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public String toString() {
+        return "(" + row + ", " + col + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ChessPosition that = (ChessPosition) obj;
+        return row == that.row && col == that.col;
+    }
+
+    @Override
+    public int hashCode() {
+        return 71 * row + col;
     }
 }
