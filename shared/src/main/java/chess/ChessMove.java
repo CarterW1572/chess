@@ -24,7 +24,6 @@ public class ChessMove {
      */
     public ChessPosition getStartPosition() {
         return start;
-        //throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -32,7 +31,6 @@ public class ChessMove {
      */
     public ChessPosition getEndPosition() {
         return end;
-        //throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -43,6 +41,25 @@ public class ChessMove {
      */
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
-        //throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public String toString() {
+        var p = (promotionPiece == null ? "" : ":" + promotionPiece);
+        return String.format("%s:%s%s", start.toString(), end.toString(), p);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ChessMove that = (ChessMove) obj;
+        return (start.equals(that.start) && end.equals(that.end) && promotionPiece == that.promotionPiece);
+    }
+
+    @Override
+    public int hashCode() {
+        var promotionCode = (promotionPiece == null ? 9 : promotionPiece.ordinal());
+        return (71 * start.hashCode()) + end.hashCode() + promotionCode;
     }
 }
