@@ -11,20 +11,12 @@ import java.util.Collection;
  */
 public class ChessPiece {
 
-    private ChessGame.TeamColor pieceColor;
-    private PieceType type;
-    private boolean rightEdge;
-    private boolean leftEdge;
-    private boolean topEdge;
-    private boolean bottomEdge;
+    private final ChessGame.TeamColor pieceColor;
+    private final PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
-        rightEdge = false;
-        leftEdge = false;
-        topEdge = false;
-        bottomEdge = false;
     }
 
     /**
@@ -61,45 +53,10 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
-        /*if (myPosition.getRow() >= 7) {
-            topEdge = true;
-        }
-        if (myPosition.getRow() <= 0) {
-            bottomEdge = true;
-        }
-        if (myPosition.getColumn() >= 7) {
-            rightEdge = true;
-        }
-        if (myPosition.getColumn() <= 0) {
-            leftEdge = true;
-        }*/
+        ArrayList<ChessMove> moves = new ArrayList<>();
         switch (getPieceType()) {
             case KING:
-                /*if (!topEdge) {
-                    moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()+1, myPosition.getColumn())));
-                    if (!rightEdge) {
-                        moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+1)));
-                    }
-                    if (!leftEdge) {
-                        moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-1)));
-                    }
-                }
-                if (!bottomEdge) {
-                    moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()-1, myPosition.getColumn())));
-                    if (!rightEdge) {
-                        moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+1)));
-                    }
-                    if (!leftEdge) {
-                        moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-1)));
-                    }
-                }
-                if (!rightEdge) {
-                    moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow(), myPosition.getColumn()+1)));
-                }
-                if (!leftEdge) {
-                    moves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow(), myPosition.getColumn()-1)));
-                }*/
+
             case QUEEN:
 
             case BISHOP:

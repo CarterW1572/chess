@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class BishopRule extends PieceRule {
 
@@ -15,7 +14,7 @@ public class BishopRule extends PieceRule {
     @Override
     public Collection<ChessMove> getPossibleMoves(ChessBoard board, ChessPosition position) {
         ChessPosition newPosition = new ChessPosition(position.getRow()+1, position.getColumn()+1);
-        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> moves = new ArrayList<>();
         while (newPosition.getRow() > 0 && newPosition.getColumn() > 0) {
             if (board.getPiece(new ChessPosition(newPosition.getRow(), newPosition.getColumn())) == null) {
                 moves.add(new ChessMove(position, new ChessPosition(newPosition.getRow(), newPosition.getColumn())));
