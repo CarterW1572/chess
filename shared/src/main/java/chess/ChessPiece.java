@@ -58,15 +58,16 @@ public class ChessPiece {
             case KING:
 
             case QUEEN:
-
+                QueenRule queen = new QueenRule(getTeamColor());
+                moves.addAll(queen.getPossibleMoves(board, myPosition));
             case BISHOP:
                 BishopRule bishop = new BishopRule(getTeamColor());
-                moves = (ArrayList<ChessMove>) bishop.getPossibleMoves(board, myPosition);
+                moves.addAll(bishop.getPossibleMoves(board, myPosition));
             case KNIGHT:
 
             case ROOK:
                 RookRule rook = new RookRule(getTeamColor());
-                moves = (ArrayList<ChessMove>) rook.getPossibleMoves(board, myPosition);
+                moves.addAll(rook.getPossibleMoves(board, myPosition));
             case PAWN:
 
         }
