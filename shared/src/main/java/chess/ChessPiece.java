@@ -65,7 +65,8 @@ public class ChessPiece {
             case KNIGHT:
 
             case ROOK:
-
+                RookRule rook = new RookRule(getTeamColor());
+                moves = (ArrayList<ChessMove>) rook.getPossibleMoves(board, myPosition);
             case PAWN:
 
         }
