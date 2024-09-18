@@ -54,20 +54,25 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> moves = new ArrayList<>();
-        switch (getPieceType()) {
+        switch (this.getPieceType()) {
             case KING:
-
+                KingRule king = new KingRule(getTeamColor());
+                moves.addAll(king.getPossibleMoves(board, myPosition));
+                break;
             case QUEEN:
                 QueenRule queen = new QueenRule(getTeamColor());
                 moves.addAll(queen.getPossibleMoves(board, myPosition));
+                break;
             case BISHOP:
                 BishopRule bishop = new BishopRule(getTeamColor());
                 moves.addAll(bishop.getPossibleMoves(board, myPosition));
+                break;
             case KNIGHT:
 
             case ROOK:
                 RookRule rook = new RookRule(getTeamColor());
                 moves.addAll(rook.getPossibleMoves(board, myPosition));
+                break;
             case PAWN:
 
         }
