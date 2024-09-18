@@ -68,7 +68,9 @@ public class ChessPiece {
                 moves.addAll(bishop.getPossibleMoves(board, myPosition));
                 break;
             case KNIGHT:
-
+                KnightRule knight = new KnightRule(getTeamColor());
+                moves.addAll(knight.getPossibleMoves(board, myPosition));
+                break;
             case ROOK:
                 RookRule rook = new RookRule(getTeamColor());
                 moves.addAll(rook.getPossibleMoves(board, myPosition));
