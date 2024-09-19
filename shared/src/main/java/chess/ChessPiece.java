@@ -76,7 +76,9 @@ public class ChessPiece {
                 moves.addAll(rook.getPossibleMoves(board, myPosition));
                 break;
             case PAWN:
-
+                PawnRule pawn = new PawnRule(getTeamColor());
+                moves.addAll(pawn.getPossibleMoves(board, myPosition));
+                break;
         }
         return moves;
     }
