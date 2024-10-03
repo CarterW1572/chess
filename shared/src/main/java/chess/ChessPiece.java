@@ -100,4 +100,9 @@ public class ChessPiece {
     public int hashCode() {
         return (71 * pieceColor.hashCode()) + type.hashCode();
     }
+
+    @Override
+    public Object clone() {
+        return new ChessPiece(this.pieceColor, this.type);
+    }
 }

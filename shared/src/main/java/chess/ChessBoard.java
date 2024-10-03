@@ -14,6 +14,16 @@ public class ChessBoard {
 
     public ChessBoard() {}
 
+    public ChessBoard(ChessPiece[][] squares) {
+        for (int row = 0; row <= 7; row++) {
+            for (int col =  0; col <= 7; col++) {
+                if (squares[row][col] != null) {
+                    this.squares[row][col] = (ChessPiece) squares[row][col].clone();
+                }
+            }
+        }
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -22,6 +32,10 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         squares[position.getRow()][position.getColumn()] = piece;
+    }
+
+    public void removePiece(ChessPosition position) {
+        squares[position.getRow()][position.getColumn()] = null;
     }
 
     /**
@@ -78,6 +92,11 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(squares);
+    }
+
+    @Override
+    public Object clone() {
+        return new ChessBoard(this.squares);
     }
 
 }
