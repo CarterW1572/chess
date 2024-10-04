@@ -15,7 +15,7 @@ public class ChessGame {
     private ChessBoard board;
 
     public ChessGame() {
-        teamTurn = TeamColor.WHITE;
+        teamTurn = TeamColor.WHITE; // Game always starts on WHITE's turn
         board = new ChessBoard();
         board.resetBoard();
     }
@@ -106,7 +106,7 @@ public class ChessGame {
                 board.addPiece(move.getEndPosition(), board.getPiece(start));
             }
             board.removePiece(start);
-            if (getTeamTurn() == TeamColor.WHITE) {
+            if (getTeamTurn() == TeamColor.WHITE) { // Switch turns after valid move is made
                 setTeamTurn(TeamColor.BLACK);
             }
             else {
