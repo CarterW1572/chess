@@ -94,6 +94,9 @@ public class ChessBoard {
         return Arrays.deepHashCode(squares);
     }
 
+    /*
+    Had to overwrite clone method on ChessBoard to create clone of board in checking valid moves.
+     */
     @Override
     public Object clone() {
         return new ChessBoard(this.squares);
