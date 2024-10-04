@@ -173,9 +173,7 @@ public class ChessGame {
                     }
                 }
             }
-            if (moves.isEmpty()) {
-                return true;
-            }
+            return moves.isEmpty();
         }
         return false;
     }
@@ -197,9 +195,7 @@ public class ChessGame {
                     }
                 }
             }
-            if (moves.isEmpty()) {
-                return true;
-            }
+            return moves.isEmpty();
         }
         return false;
     }
