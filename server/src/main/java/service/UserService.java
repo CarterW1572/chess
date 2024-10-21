@@ -3,6 +3,8 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import server.BadRequestException;
+
 import java.util.Random;
 
 import javax.xml.crypto.Data;
@@ -30,10 +32,17 @@ public class UserService {
         return authToken.toString();
     }
 
-    public AuthData register(UserData userData) throws DataAccessException {
-        userDAO.findUserData(userData);
-        String username = userData.username();
-        String authToken = generateAuthToken();
-        return new AuthData(username, authToken);
+    public AuthData register(UserData user) throws DataAccessException {
+        if (user.username() == null || user.password() == null || user.email() == null) {
+            throw new BadRequestException("Error: bad request");
+        }
+        if (userDAO.findUserData(user) == null) {
+            String username = user.username();
+            String authToken = generateAuthToken();
+            return new AuthData(authToken, username);
+        }
+        else {
+            throw new DataAccessException("Error: already taken");
+        }
     }
 }

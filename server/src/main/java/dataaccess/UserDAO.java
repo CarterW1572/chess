@@ -4,5 +4,5 @@ import model.*;
 
 public interface UserDAO {
     void clear() throws DataAccessException;
-    boolean findUserData(UserData userData) throws DataAccessException;
+    UserData findUserData(UserData userData);
 }

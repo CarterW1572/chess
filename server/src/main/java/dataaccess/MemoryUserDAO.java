@@ -15,10 +15,7 @@ public class MemoryUserDAO implements UserDAO {
         users.clear();
     }
 
-    public boolean findUserData(UserData userData) throws DataAccessException {
-        if (users.containsKey(userData.username())) {
-            throw new DataAccessException("Error: already taken");
-        }
-        return false;
+    public UserData findUserData(UserData userData) {
+        return users.get(userData.username());
     }
 }
