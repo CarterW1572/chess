@@ -13,7 +13,9 @@ public class Server {
         GameDAO gameDAO = new MemoryGameDAO();
         AuthDAO authDAO = new MemoryAuthDAO();
         DataService dataService = new DataService(userDAO, gameDAO, authDAO);
-        handler = new Handler(dataService);
+        UserService userService = new UserService(userDAO, gameDAO, authDAO);
+        GameService gameService = new GameService(userDAO, gameDAO, authDAO);
+        handler = new Handler(dataService, userService, gameService);
     }
 
     public int run(int desiredPort) {
@@ -22,8 +24,24 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
-        Spark.delete("/db", handler::clear);
-        Spark.post("/user", handler::register);
+        Spark.delete("/db", (req, res) -> {
+            res.status(200);
+            return handler.clear();
+        }); //Handle exceptions in here!
+        Spark.post("/user", (req, res) -> {
+            try {
+                res.status(200);
+                return handler.register(req);
+            }
+            catch(BadRequestException e) {
+                res.status(400);
+                return e.getMessage();
+            }
+            catch(DataAccessException e) {
+                res.status(403);
+                return e.getMessage();
+            }
+        });
         Spark.post("/session", handler::login);
         Spark.delete("/session", handler::logout);
         Spark.get("/game", handler::listGames);
