@@ -41,7 +41,9 @@ public class UserService {
             String username = user.username();
             String authToken = generateAuthToken();
             userDAO.addUserData(user);
-            return new AuthData(authToken, username);
+            var authData = new AuthData(authToken, username);
+            userDAO.addAuthData(authData);
+            return authData;
         }
         else {
             throw new DataAccessException("{ \"message\": \"Error: already taken\" }");
@@ -52,8 +54,17 @@ public class UserService {
         if (userDAO.findUserData(loginReq.username()) != null &&
             userDAO.findUserData(loginReq.username()).password().equals(loginReq.password())) {
             String authToken = generateAuthToken();
-            return new AuthData(authToken, loginReq.username());
+            var authData = new AuthData(authToken, loginReq.username());
+            userDAO.addAuthData(authData);
+            return authData;
         }
         throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
+    }
+
+    public void logout(String authToken) {
+        if (userDAO.findAuthData(authToken) == null) {
+            throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
+        }
+        userDAO.deleteAuthData(authToken);
     }
 }

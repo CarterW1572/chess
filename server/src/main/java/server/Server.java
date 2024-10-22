@@ -55,9 +55,34 @@ public class Server {
             }
         });
 
-        Spark.delete("/session", handler::logout);
+        Spark.delete("/session", (req, res) -> {
+            try {
+                res.status(200);
+                return handler.logout(req);
+            }
+            catch (UnauthorizedException e) {
+                res.status(401);
+                return e.getMessage();
+            }
+        });
+
         Spark.get("/game", handler::listGames);
-        Spark.post("/game", handler::createGame);
+
+        Spark.post("/game", (req, res) -> {
+            try {
+                res.status(200);
+                return handler.createGame(req);
+            }
+            catch (BadRequestException e) {
+                res.status(400);
+                return e.getMessage();
+            }
+            catch (UnauthorizedException e) {
+                res.status(401);
+                return e.getMessage();
+            }
+        });
+
         Spark.put("/game", handler::joinGame);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 

@@ -39,23 +39,28 @@ public class Handler {
         return serializer.toJson(authData);
     }
 
-    public Object logout(Request req, Response res) throws DataAccessException {
+    public Object logout(Request req) throws DataAccessException {
+        var authToken = serializer.fromJson(req.headers("authorization"), String.class);
+        userService.logout(authToken);
         return "{}";
     }
 
-    public Object listGames(Request req, Response res) throws DataAccessException {
+    public Object listGames(Request req) throws DataAccessException {
+
         return """
                 { "games": [{"gameID": 1234, "whiteUsername":"", "blackUsername":"", "gameName:""} ]}
                 """;
     }
 
-    public Object createGame(Request req, Response res) throws DataAccessException {
+    public Object createGame(Request req) throws DataAccessException {
+
         return """
                 { "gameID": 1234 }
                 """;
     }
 
-    public Object joinGame(Request req, Response res) throws DataAccessException {
+    public Object joinGame(Request req) throws DataAccessException {
+
         return "{}";
     }
 }
