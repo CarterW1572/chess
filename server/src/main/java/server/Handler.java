@@ -53,10 +53,10 @@ public class Handler {
     }
 
     public Object createGame(Request req) throws DataAccessException {
-
-        return """
-                { "gameID": 1234 }
-                """;
+        var authToken = serializer.fromJson(req.headers("authorization"), String.class);
+        var createGameRequest = serializer.fromJson(req.body(), CreateGameRequest.class);
+        CreateGameResult createGameResult = gameService.createGame(authToken, createGameRequest);
+        return serializer.toJson(createGameResult);
     }
 
     public Object joinGame(Request req) throws DataAccessException {

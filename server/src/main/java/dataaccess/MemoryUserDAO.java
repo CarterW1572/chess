@@ -21,19 +21,7 @@ public class MemoryUserDAO implements UserDAO {
         users.put(userData.username(), userData);
     }
 
-    public void addAuthData(AuthData authData) {
-        authTokens.put(authData.authToken(), authData);
-    }
-
     public UserData findUserData(String username) {
         return users.get(username);
-    }
-
-    public AuthData findAuthData(String authToken) {
-        return authTokens.get(authToken);
-    }
-
-    public void deleteAuthData(String authToken) {
-        authTokens.remove(authToken);
     }
 }

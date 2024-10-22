@@ -42,7 +42,7 @@ public class UserService {
             String authToken = generateAuthToken();
             userDAO.addUserData(user);
             var authData = new AuthData(authToken, username);
-            userDAO.addAuthData(authData);
+            authDAO.addAuthData(authData);
             return authData;
         }
         else {
@@ -55,16 +55,16 @@ public class UserService {
             userDAO.findUserData(loginReq.username()).password().equals(loginReq.password())) {
             String authToken = generateAuthToken();
             var authData = new AuthData(authToken, loginReq.username());
-            userDAO.addAuthData(authData);
+            authDAO.addAuthData(authData);
             return authData;
         }
         throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
     }
 
     public void logout(String authToken) {
-        if (userDAO.findAuthData(authToken) == null) {
+        if (authDAO.findAuthData(authToken) == null) {
             throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
         }
-        userDAO.deleteAuthData(authToken);
+        authDAO.deleteAuthData(authToken);
     }
 }

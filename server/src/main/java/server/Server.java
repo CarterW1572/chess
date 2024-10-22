@@ -66,7 +66,16 @@ public class Server {
             }
         });
 
-        Spark.get("/game", handler::listGames);
+        Spark.get("/game", (req, res) -> {
+            try {
+                res.status(200);
+                return handler.listGames(req);
+            }
+            catch (UnauthorizedException e) {
+                res.status(401);
+                return e.getMessage();
+            }
+        });
 
         Spark.post("/game", (req, res) -> {
             try {
@@ -83,7 +92,24 @@ public class Server {
             }
         });
 
-        Spark.put("/game", handler::joinGame);
+        Spark.put("/game", (req, res) -> {
+            try {
+                res.status(200);
+                return handler.joinGame(req);
+            }
+            catch (BadRequestException e) {
+                res.status(400);
+                return e.getMessage();
+            }
+            catch (UnauthorizedException e) {
+                res.status(401);
+                return e.getMessage();
+            }
+            catch (DataAccessException e) {
+                res.status(403);
+                return e.getMessage();
+            }
+        });
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
