@@ -26,9 +26,9 @@ public class Handler {
     }
 
     public Object register(Request req) throws DataAccessException {
-        var userData = new Gson().fromJson(req.body(), UserData.class);
+        var userData = serializer.fromJson(req.body(), UserData.class);
         AuthData authData = userService.register(userData);
-        return new Gson().toJson(authData);
+        return serializer.toJson(authData);
     }
 
     public Object login(Request req, Response res) throws DataAccessException {

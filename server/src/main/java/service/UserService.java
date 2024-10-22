@@ -34,15 +34,16 @@ public class UserService {
 
     public AuthData register(UserData user) throws DataAccessException {
         if (user.username() == null || user.password() == null || user.email() == null) {
-            throw new BadRequestException("Error: bad request");
+            throw new BadRequestException("{ \"message\": \"Error: bad request\" }");
         }
         if (userDAO.findUserData(user) == null) {
             String username = user.username();
             String authToken = generateAuthToken();
+            userDAO.addUserData(user);
             return new AuthData(authToken, username);
         }
         else {
-            throw new DataAccessException("Error: already taken");
+            throw new DataAccessException("{ \"message\": \"Error: already taken\" }");
         }
     }
 }
