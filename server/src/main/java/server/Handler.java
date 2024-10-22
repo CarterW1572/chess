@@ -27,40 +27,42 @@ public class Handler {
         return "{}";
     }
 
-    public Object register(Request req) throws DataAccessException {
+    public Object register(Request req) throws BadRequestException, DataAccessException {
         var userData = serializer.fromJson(req.body(), UserData.class);
         AuthData authData = userService.register(userData);
         return serializer.toJson(authData);
     }
 
-    public Object login(Request req) throws DataAccessException {
+    public Object login(Request req) throws UnauthorizedException {
         var loginReq = serializer.fromJson(req.body(), LoginRequest.class);
         AuthData authData = userService.login(loginReq);
         return serializer.toJson(authData);
     }
 
-    public Object logout(Request req) throws DataAccessException {
+    public Object logout(Request req) throws UnauthorizedException {
         var authToken = serializer.fromJson(req.headers("authorization"), String.class);
         userService.logout(authToken);
         return "{}";
     }
 
-    public Object listGames(Request req) throws DataAccessException {
+    public Object listGames(Request req) throws UnauthorizedException {
 
         return """
                 { "games": [{"gameID": 1234, "whiteUsername":"", "blackUsername":"", "gameName:""} ]}
                 """;
     }
 
-    public Object createGame(Request req) throws DataAccessException {
+    public Object createGame(Request req) throws BadRequestException, UnauthorizedException {
         var authToken = serializer.fromJson(req.headers("authorization"), String.class);
         var createGameRequest = serializer.fromJson(req.body(), CreateGameRequest.class);
         CreateGameResult createGameResult = gameService.createGame(authToken, createGameRequest);
         return serializer.toJson(createGameResult);
     }
 
-    public Object joinGame(Request req) throws DataAccessException {
-
+    public Object joinGame(Request req) throws UnauthorizedException, DataAccessException, BadRequestException {
+        var authToken = serializer.fromJson(req.headers("authorization"), String.class);
+        var joinGameRequest = serializer.fromJson(req.body(), JoinGameRequest.class);
+        gameService.joinGame(authToken, joinGameRequest);
         return "{}";
     }
 }
