@@ -3,6 +3,8 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.*;
+import requestObjects.*;
+import resultObjects.*;
 import service.*;
 import spark.*;
 
@@ -31,10 +33,10 @@ public class Handler {
         return serializer.toJson(authData);
     }
 
-    public Object login(Request req, Response res) throws DataAccessException {
-        return """
-                {"username": "", "authToken": ""}
-                """;
+    public Object login(Request req) throws DataAccessException {
+        var loginReq = serializer.fromJson(req.body(), LoginRequest.class);
+        AuthData authData = userService.login(loginReq);
+        return serializer.toJson(authData);
     }
 
     public Object logout(Request req, Response res) throws DataAccessException {

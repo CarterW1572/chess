@@ -19,7 +19,7 @@ public class MemoryUserDAO implements UserDAO {
         users.put(userData.username(), userData);
     }
 
-    public UserData findUserData(UserData userData) {
-        return users.get(userData.username());
+    public UserData findUserData(String username) {
+        return users.get(username);
     }
 }

@@ -3,6 +3,7 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import requestObjects.LoginRequest;
 import server.BadRequestException;
 
 import java.util.Random;
@@ -36,7 +37,7 @@ public class UserService {
         if (user.username() == null || user.password() == null || user.email() == null) {
             throw new BadRequestException("{ \"message\": \"Error: bad request\" }");
         }
-        if (userDAO.findUserData(user) == null) {
+        if (userDAO.findUserData(user.username()) == null) {
             String username = user.username();
             String authToken = generateAuthToken();
             userDAO.addUserData(user);
@@ -45,5 +46,14 @@ public class UserService {
         else {
             throw new DataAccessException("{ \"message\": \"Error: already taken\" }");
         }
+    }
+
+    public AuthData login(LoginRequest loginReq) {
+        if (userDAO.findUserData(loginReq.username()) != null &&
+            userDAO.findUserData(loginReq.username()).password().equals(loginReq.password())) {
+            String authToken = generateAuthToken();
+            return new AuthData(authToken, loginReq.username());
+        }
+        throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
     }
 }

@@ -27,22 +27,34 @@ public class Server {
         Spark.delete("/db", (req, res) -> {
             res.status(200);
             return handler.clear();
-        }); //Handle exceptions in here!
+        });
+
         Spark.post("/user", (req, res) -> {
             try {
                 res.status(200);
                 return handler.register(req);
             }
-            catch(BadRequestException e) {
+            catch (BadRequestException e) {
                 res.status(400);
                 return e.getMessage();
             }
-            catch(DataAccessException e) {
+            catch (DataAccessException e) {
                 res.status(403);
                 return e.getMessage();
             }
         });
-        Spark.post("/session", handler::login);
+
+        Spark.post("/session", (req, res) -> {
+            try {
+                res.status(200);
+                return handler.login(req);
+            }
+            catch (UnauthorizedException e) {
+                res.status(401);
+                return e.getMessage();
+            }
+        });
+
         Spark.delete("/session", handler::logout);
         Spark.get("/game", handler::listGames);
         Spark.post("/game", handler::createGame);
