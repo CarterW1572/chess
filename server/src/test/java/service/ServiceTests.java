@@ -35,7 +35,7 @@ public class ServiceTests {
             dataService.clear();
         }
         catch (DataAccessException e) {
-            throw new RuntimeException(e);
+            Assertions.fail();
         }
     }
 
