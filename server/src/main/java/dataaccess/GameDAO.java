@@ -2,7 +2,6 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.*;
-import requestObjects.JoinGameRequest;
 
 import java.util.HashMap;
 

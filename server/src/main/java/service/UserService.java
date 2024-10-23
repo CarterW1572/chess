@@ -3,12 +3,10 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
-import requestObjects.LoginRequest;
+import requests.LoginRequest;
 import server.BadRequestException;
 
 import java.util.Random;
-
-import javax.xml.crypto.Data;
 
 public class UserService {
     private final UserDAO userDAO;

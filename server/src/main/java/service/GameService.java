@@ -6,10 +6,10 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.GameData;
-import requestObjects.CreateGameRequest;
-import requestObjects.JoinGameRequest;
-import resultObjects.CreateGameResult;
-import resultObjects.ListGameResult;
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import results.CreateGameResult;
+import results.ListGameResult;
 import server.BadRequestException;
 
 import java.util.ArrayList;

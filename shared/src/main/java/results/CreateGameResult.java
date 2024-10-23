@@ -1,3 +1,3 @@
-package resultObjects;
+package results;
 
 public record CreateGameResult(int gameID) {}

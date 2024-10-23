@@ -129,7 +129,8 @@ public class ChessGame {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 if (board.getPiece(new ChessPosition(row, col)) != null) {
-                    if (board.getPiece(new ChessPosition(row, col)).getPieceType() == ChessPiece.PieceType.KING && board.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
+                    if (board.getPiece(new ChessPosition(row, col)).getPieceType() == ChessPiece.PieceType.KING &&
+                            board.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
                         kingPosition = new ChessPosition(row, col);
                     }
                 }
@@ -140,13 +141,18 @@ public class ChessGame {
             for (int col = 1; col <= 8; col++) {
                 if (board.getPiece(new ChessPosition(row, col)) != null) {
                     if (board.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
-                        enemyMoves.addAll(board.getPiece(new ChessPosition(row, col)).pieceMoves(board, new ChessPosition(row, col)));
+                        enemyMoves.addAll(board.getPiece(new ChessPosition(row, col)).pieceMoves(board,
+                                new ChessPosition(row, col)));
                         for (ChessMove move : enemyMoves) {
                             if (move.equals(new ChessMove(new ChessPosition(row, col), kingPosition)) ||
-                                move.equals(new ChessMove(new ChessPosition(row, col), kingPosition, ChessPiece.PieceType.QUEEN)) ||
-                                move.equals(new ChessMove(new ChessPosition(row, col), kingPosition, ChessPiece.PieceType.BISHOP)) ||
-                                move.equals(new ChessMove(new ChessPosition(row, col), kingPosition, ChessPiece.PieceType.KNIGHT)) ||
-                                move.equals(new ChessMove(new ChessPosition(row, col), kingPosition, ChessPiece.PieceType.ROOK))) {
+                                move.equals(new ChessMove(new ChessPosition(row, col),
+                                        kingPosition, ChessPiece.PieceType.QUEEN)) ||
+                                move.equals(new ChessMove(new ChessPosition(row, col),
+                                        kingPosition, ChessPiece.PieceType.BISHOP)) ||
+                                move.equals(new ChessMove(new ChessPosition(row, col),
+                                        kingPosition, ChessPiece.PieceType.KNIGHT)) ||
+                                move.equals(new ChessMove(new ChessPosition(row, col),
+                                        kingPosition, ChessPiece.PieceType.ROOK))) {
                                 return true;
                             }
                         }
@@ -166,17 +172,22 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)) {
-            var moves = new ArrayList<ChessMove>();
-            for (int row = 1; row <= 8; row++) {
-                for (int col = 1; col <= 8; col++) {
-                    if (board.getPiece(new ChessPosition(row, col)) != null && board.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
-                        moves.addAll(validMoves(new ChessPosition(row, col)));
-                    }
-                }
-            }
-            return moves.isEmpty();
+            return getValidMoves(teamColor);
         }
         return false;
+    }
+
+    private boolean getValidMoves(TeamColor teamColor) {
+        var moves = new ArrayList<ChessMove>();
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                if (board.getPiece(new ChessPosition(row, col)) != null &&
+                        board.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
+                    moves.addAll(validMoves(new ChessPosition(row, col)));
+                }
+            }
+        }
+        return moves.isEmpty();
     }
 
     /**
@@ -188,15 +199,7 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if (!isInCheck(teamColor)) {
-            var moves = new ArrayList<ChessMove>();
-            for (int row = 1; row <= 8; row++) {
-                for (int col = 1; col <= 8; col++) {
-                    if (board.getPiece(new ChessPosition(row, col)) != null && board.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
-                        moves.addAll(validMoves(new ChessPosition(row, col)));
-                    }
-                }
-            }
-            return moves.isEmpty();
+            return getValidMoves(teamColor);
         }
         return false;
     }

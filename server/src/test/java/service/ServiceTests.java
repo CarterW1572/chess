@@ -6,7 +6,7 @@ import model.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import requestObjects.*;
+import requests.*;
 import server.BadRequestException;
 
 public class ServiceTests {

@@ -3,12 +3,10 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.*;
-import requestObjects.*;
-import resultObjects.*;
+import requests.*;
+import results.*;
 import service.*;
 import spark.*;
-
-import javax.xml.crypto.Data;
 
 public class Handler {
     private final DataService dataService;

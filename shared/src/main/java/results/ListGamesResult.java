@@ -1,4 +1,4 @@
-package resultObjects;
+package results;
 
 import java.util.ArrayList;
 

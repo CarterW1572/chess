@@ -90,8 +90,12 @@ public class ChessPiece {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         ChessPiece that = (ChessPiece) obj;
         return pieceColor.equals(that.pieceColor) && type.equals(that.type);
     }
