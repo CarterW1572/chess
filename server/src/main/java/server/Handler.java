@@ -40,26 +40,26 @@ public class Handler {
     }
 
     public Object logout(Request req) throws UnauthorizedException {
-        var authToken = serializer.fromJson(req.headers("authorization"), String.class);
+        var authToken = req.headers("authorization"); /*serializer.fromJson(req.headers("authorization"), String.class);*/
         userService.logout(authToken);
         return "{}";
     }
 
     public Object listGames(Request req) throws UnauthorizedException {
-        var authToken = serializer.fromJson(req.headers("authorization"), String.class);
-        var gameList = gameService.listGames(authToken);
+        var authToken = req.headers("authorization"); /*serializer.fromJson(req.headers("authorization"), String.class);*/
+        ListGamesResult gameList = new ListGamesResult(gameService.listGames(authToken));
         return serializer.toJson(gameList);
     }
 
     public Object createGame(Request req) throws BadRequestException, UnauthorizedException {
-        var authToken = serializer.fromJson(req.headers("authorization"), String.class);
+        var authToken = req.headers("authorization"); /*serializer.fromJson(req.headers("authorization"), String.class);*/
         var createGameRequest = serializer.fromJson(req.body(), CreateGameRequest.class);
         CreateGameResult createGameResult = gameService.createGame(authToken, createGameRequest);
         return serializer.toJson(createGameResult);
     }
 
     public Object joinGame(Request req) throws UnauthorizedException, DataAccessException, BadRequestException {
-        var authToken = serializer.fromJson(req.headers("authorization"), String.class);
+        var authToken = req.headers("authorization");  /*serializer.fromJson(req.headers("authorization"), String.class);*/
         var joinGameRequest = serializer.fromJson(req.body(), JoinGameRequest.class);
         gameService.joinGame(authToken, joinGameRequest);
         return "{}";
