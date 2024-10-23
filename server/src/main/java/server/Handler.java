@@ -46,10 +46,9 @@ public class Handler {
     }
 
     public Object listGames(Request req) throws UnauthorizedException {
-
-        return """
-                { "games": [{"gameID": 1234, "whiteUsername":"", "blackUsername":"", "gameName:""} ]}
-                """;
+        var authToken = serializer.fromJson(req.headers("authorization"), String.class);
+        var gameList = gameService.listGames(authToken);
+        return serializer.toJson(gameList);
     }
 
     public Object createGame(Request req) throws BadRequestException, UnauthorizedException {

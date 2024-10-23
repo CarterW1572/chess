@@ -9,7 +9,11 @@ import model.GameData;
 import requestObjects.CreateGameRequest;
 import requestObjects.JoinGameRequest;
 import resultObjects.CreateGameResult;
+import resultObjects.ListGameResult;
 import server.BadRequestException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import java.util.Random;
 
@@ -42,13 +46,30 @@ public class GameService {
             throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
         }
         GameData game = gameDAO.findGame(joinGameRequest.gameID());
-        if (game == null) {
+        if (game == null || joinGameRequest.playerColor() == null) {
             throw new BadRequestException("{ \"message\": \"Error: bad request\" }");
         }
-        if ((game.whiteUsername() != null && joinGameRequest.color() == ChessGame.TeamColor.WHITE) ||
-            (game.blackUsername() != null && joinGameRequest.color() == ChessGame.TeamColor.BLACK)) {
+        if ((game.whiteUsername() != null && joinGameRequest.playerColor() == ChessGame.TeamColor.WHITE) ||
+            (game.blackUsername() != null && joinGameRequest.playerColor() == ChessGame.TeamColor.BLACK)) {
             throw new DataAccessException("{ \"message\": \"Error: already taken\" }");
         }
-        gameDAO.updateGame(joinGameRequest.gameID(), authDAO.findAuthData(authToken).username(), joinGameRequest.color());
+        gameDAO.updateGame(joinGameRequest.gameID(), authDAO.findAuthData(authToken).username(), joinGameRequest.playerColor());
+    }
+
+    public ArrayList<ListGameResult> listGames(String authToken) {
+        if (authDAO.findAuthData(authToken) == null) {
+            throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
+        }
+        HashMap<Integer, GameData> games = gameDAO.getAllGames();
+        var gameList = new ArrayList<ListGameResult>();
+        for (GameData gameData : games.values()) {
+            var gameID = gameData.gameID();
+            var whiteUsername = gameData.whiteUsername();
+            var blackUsername = gameData.blackUsername();
+            var gameName = gameData.gameName();
+            var newGameData = new ListGameResult(gameID, whiteUsername, blackUsername, gameName);
+            gameList.add(newGameData);
+        }
+        return gameList;
     }
 }

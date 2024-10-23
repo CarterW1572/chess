@@ -45,4 +45,8 @@ public class MemoryGameDAO implements GameDAO {
             games.put(gameID, newGame);
         }
     }
+
+    public HashMap<Integer, GameData> getAllGames() {
+        return games;
+    }
 }
