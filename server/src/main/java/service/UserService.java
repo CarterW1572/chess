@@ -3,6 +3,7 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import requests.LoginRequest;
 import server.BadRequestException;
 
@@ -37,8 +38,10 @@ public class UserService {
         }
         if (userDAO.findUserData(user.username()) == null) {
             String username = user.username();
+            String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+            UserData newUser = new UserData(user.username(), hashedPassword, user.email());
             String authToken = generateAuthToken();
-            userDAO.addUserData(user);
+            userDAO.addUserData(newUser);
             var authData = new AuthData(authToken, username);
             authDAO.addAuthData(authData);
             return authData;
@@ -50,7 +53,8 @@ public class UserService {
 
     public AuthData login(LoginRequest loginReq) throws DataAccessException {
         if (userDAO.findUserData(loginReq.username()) != null &&
-            userDAO.findUserData(loginReq.username()).password().equals(loginReq.password())) {
+                BCrypt.checkpw(loginReq.password(), userDAO.findUserData(loginReq.username()).password())
+                /*userDAO.findUserData(loginReq.username()).password().equals(loginReq.password())*/) {
             String authToken = generateAuthToken();
             var authData = new AuthData(authToken, loginReq.username());
             authDAO.addAuthData(authData);
