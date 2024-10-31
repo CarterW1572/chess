@@ -4,8 +4,6 @@ import model.AuthData;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import dataaccess.SQLUserDAO;
-import model.UserData;
 
 public class SQLAuthDAO implements AuthDAO {
 

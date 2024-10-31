@@ -43,13 +43,13 @@ public class Handler {
         return "{}";
     }
 
-    public Object listGames(Request req) throws UnauthorizedException {
+    public Object listGames(Request req) throws UnauthorizedException, DataAccessException {
         var authToken = req.headers("authorization"); /*serializer.fromJson(req.headers("authorization"), String.class);*/
         ListGamesResult gameList = new ListGamesResult(gameService.listGames(authToken));
         return serializer.toJson(gameList);
     }
 
-    public Object createGame(Request req) throws BadRequestException, UnauthorizedException {
+    public Object createGame(Request req) throws BadRequestException, UnauthorizedException, DataAccessException {
         var authToken = req.headers("authorization"); /*serializer.fromJson(req.headers("authorization"), String.class);*/
         var createGameRequest = serializer.fromJson(req.body(), CreateGameRequest.class);
         CreateGameResult createGameResult = gameService.createGame(authToken, createGameRequest);

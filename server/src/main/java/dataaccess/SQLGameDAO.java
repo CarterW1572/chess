@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 import model.GameData;
 
 import java.sql.SQLException;
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import static java.sql.Types.NULL;
 
 public class SQLGameDAO implements GameDAO {
+
+    private final Gson serializer = new Gson();
 
     public SQLGameDAO() {
         try {
@@ -33,12 +36,20 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void clear() throws DataAccessException {
-
+        var statement = "TRUNCATE gameData";
+        executeUpdate(statement);
     }
 
     @Override
     public void addGame(GameData game) throws DataAccessException {
-
+        var gameID = game.gameID();
+        var whiteUsername = game.whiteUsername();
+        var blackUsername = game.blackUsername();
+        var gameName = game.gameName();
+        var chessGame = serializer.toJson(game.game());
+        var statement = "INSERT INTO gameData (gameID, whiteUsername, blackUsername, gameName, game) " +
+                "VALUES (?, ?, ?, ?, ?)";
+        executeUpdate(statement, gameID, whiteUsername, blackUsername, gameName, chessGame);
     }
 
     @Override
@@ -61,10 +72,18 @@ public class SQLGameDAO implements GameDAO {
             try (var ps = conn.prepareStatement(statement)) {
                 for (var i = 0; i < params.length; i++) {
                     var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param instanceof ChessGame p) ps.setString(i + 1, p.toString());
-                    else if (param == null) ps.setNull(i + 1, NULL);
+                    if (param instanceof String p) {
+                        ps.setString(i + 1, p);
+                    }
+                    else if (param instanceof Integer p) {
+                        ps.setInt(i + 1, p);
+                    }
+                    else if (param instanceof ChessGame p) {
+                        ps.setString(i + 1, p.toString());
+                    }
+                    else if (param == null) {
+                        ps.setNull(i + 1, NULL);
+                    }
                 }
                 ps.executeUpdate();
             }
