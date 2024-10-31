@@ -9,7 +9,17 @@ public class SQLUserDAO implements UserDAO {
 
     public SQLUserDAO() {
         try {
-            configureDatabase();
+            String[] createUserTable = {
+                    """
+            CREATE TABLE IF NOT EXISTS userData (
+              `username` varchar(256) NOT NULL,
+              `password` varchar(256) NOT NULL,
+              `email` varchar(256) NOT NULL,
+              PRIMARY KEY (`username`),
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+            """
+            };
+            configureDatabase(createUserTable);
         }
         catch (DataAccessException e) {
             System.out.println(e.getMessage());
@@ -72,18 +82,8 @@ public class SQLUserDAO implements UserDAO {
         }
     }
 
-    private final String[] createStatements = {
-            """
-            CREATE TABLE IF NOT EXISTS userData (
-              `username` varchar(256) NOT NULL,
-              `password` varchar(256) NOT NULL,
-              `email` varchar(256) NOT NULL,
-              PRIMARY KEY (`username`),
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-            """
-    };
-
-    private void configureDatabase() throws DataAccessException {
+    public static void configureDatabase(String[] createStatements) throws DataAccessException {
+        DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {

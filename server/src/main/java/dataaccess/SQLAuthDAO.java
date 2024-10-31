@@ -11,7 +11,16 @@ public class SQLAuthDAO implements AuthDAO {
 
     public SQLAuthDAO() {
         try {
-            configureDatabase();
+            String[] createAuthTable = {
+                    """
+            CREATE TABLE IF NOT EXISTS authData (
+              `authToken` varchar(256) NOT NULL,
+              `username` varchar(256) NOT NULL,
+              PRIMARY KEY (`authToken`),
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+            """
+            };
+            SQLUserDAO.configureDatabase(createAuthTable);
         }
         catch (DataAccessException e) {
             System.out.println(e.getMessage());
@@ -63,19 +72,10 @@ public class SQLAuthDAO implements AuthDAO {
         return new AuthData(authToken, username);
     }
 
-    private final String[] createStatements = {
-            """
-            CREATE TABLE IF NOT EXISTS authData (
-              `authToken` varchar(256) NOT NULL,
-              `username` varchar(256) NOT NULL,
-              PRIMARY KEY (`authToken`),
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-            """
-    };
-
-    private void configureDatabase() throws DataAccessException {
+    /*private void configureDatabase() throws DataAccessException {
+        DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
+            for (var statement : createAuthTable) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
                 }
@@ -84,5 +84,5 @@ public class SQLAuthDAO implements AuthDAO {
         catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
-    }
+    }*/
 }
