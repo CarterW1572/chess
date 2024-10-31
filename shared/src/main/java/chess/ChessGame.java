@@ -128,38 +128,44 @@ public class ChessGame {
         var kingPosition = new ChessPosition();
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
-                if (board.getPiece(new ChessPosition(row, col)) != null) {
-                    if (board.getPiece(new ChessPosition(row, col)).getPieceType() == ChessPiece.PieceType.KING &&
-                            board.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
-                        kingPosition = new ChessPosition(row, col);
-                    }
+                if (board.getPiece(new ChessPosition(row, col)) != null &&
+                        board.getPiece(new ChessPosition(row, col)).getPieceType() == ChessPiece.PieceType.KING &&
+                        board.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
+                    kingPosition = new ChessPosition(row, col);
                 }
             }
         }
         var enemyMoves = new ArrayList<ChessMove>();
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
-                if (board.getPiece(new ChessPosition(row, col)) != null) {
-                    if (board.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
-                        enemyMoves.addAll(board.getPiece(new ChessPosition(row, col)).pieceMoves(board,
-                                new ChessPosition(row, col)));
-                        for (ChessMove move : enemyMoves) {
-                            if (move.equals(new ChessMove(new ChessPosition(row, col), kingPosition)) ||
-                                move.equals(new ChessMove(new ChessPosition(row, col),
-                                        kingPosition, ChessPiece.PieceType.QUEEN)) ||
-                                move.equals(new ChessMove(new ChessPosition(row, col),
-                                        kingPosition, ChessPiece.PieceType.BISHOP)) ||
-                                move.equals(new ChessMove(new ChessPosition(row, col),
-                                        kingPosition, ChessPiece.PieceType.KNIGHT)) ||
-                                move.equals(new ChessMove(new ChessPosition(row, col),
-                                        kingPosition, ChessPiece.PieceType.ROOK))) {
-                                return true;
-                            }
-                        }
-                        enemyMoves.clear();
-                    }
+                if (board.getPiece(new ChessPosition(row, col)) != null &&
+                        getEnemyMoves(row, col, teamColor, kingPosition, enemyMoves)) {
+                    return true;
                 }
             }
+        }
+        return false;
+    }
+
+    private boolean getEnemyMoves(int row, int col, TeamColor teamColor, ChessPosition kingPosition,
+                                  ArrayList<ChessMove> enemyMoves) {
+        if (board.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
+            enemyMoves.addAll(board.getPiece(new ChessPosition(row, col)).pieceMoves(board,
+                    new ChessPosition(row, col)));
+            for (ChessMove move : enemyMoves) {
+                if (move.equals(new ChessMove(new ChessPosition(row, col), kingPosition)) ||
+                        move.equals(new ChessMove(new ChessPosition(row, col),
+                                kingPosition, ChessPiece.PieceType.QUEEN)) ||
+                        move.equals(new ChessMove(new ChessPosition(row, col),
+                                kingPosition, ChessPiece.PieceType.BISHOP)) ||
+                        move.equals(new ChessMove(new ChessPosition(row, col),
+                                kingPosition, ChessPiece.PieceType.KNIGHT)) ||
+                        move.equals(new ChessMove(new ChessPosition(row, col),
+                                kingPosition, ChessPiece.PieceType.ROOK))) {
+                    return true;
+                }
+            }
+            enemyMoves.clear();
         }
         return false;
     }
