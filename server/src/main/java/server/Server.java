@@ -4,14 +4,16 @@ import dataaccess.*;
 import service.*;
 import spark.*;
 
+import javax.xml.crypto.Data;
+
 public class Server {
 
     private final Handler handler;
 
     public Server() {
-        UserDAO userDAO = new MemoryUserDAO();
-        GameDAO gameDAO = new MemoryGameDAO();
-        AuthDAO authDAO = new MemoryAuthDAO();
+        UserDAO userDAO = new SQLUserDAO(); /*MemoryUserDAO();*/
+        GameDAO gameDAO = new SQLGameDAO(); /*MemoryGameDAO();*/
+        AuthDAO authDAO = new SQLAuthDAO(); /*MemoryAuthDAO();*/
         DataService dataService = new DataService(userDAO, gameDAO, authDAO);
         UserService userService = new UserService(userDAO, gameDAO, authDAO);
         GameService gameService = new GameService(userDAO, gameDAO, authDAO);
@@ -51,6 +53,10 @@ public class Server {
             }
             catch (UnauthorizedException e) {
                 res.status(401);
+                return e.getMessage();
+            }
+            catch (DataAccessException e) {
+                res.status(500);
                 return e.getMessage();
             }
         });
