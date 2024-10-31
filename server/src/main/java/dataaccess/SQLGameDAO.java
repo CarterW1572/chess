@@ -75,7 +75,19 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void updateGame(int gameID, String username, ChessGame.TeamColor color) throws DataAccessException {
-
+        var gameData = findGame(gameID);
+        GameData newGame;
+        if (color == ChessGame.TeamColor.WHITE) {
+            newGame = new GameData(gameData.gameID(), username, gameData.blackUsername(), gameData.gameName(),
+                    gameData.game());
+        }
+        else {
+            newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), username, gameData.gameName(),
+                    gameData.game());
+        }
+        var statement = "DELETE FROM gameData WHERE gameID=?";
+        executeUpdate(statement, gameID);
+        addGame(newGame);
     }
 
     @Override
