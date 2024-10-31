@@ -142,7 +142,7 @@ public class SQLGameDAO implements GameDAO {
             }
         }
         catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
+            throw new DataAccessException(" { Error: " + e.getMessage() + " }");
         }
     }
 }
