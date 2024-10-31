@@ -92,7 +92,22 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public HashMap<Integer, GameData> getAllGames() throws DataAccessException {
-        return null;
+        var games = new HashMap<Integer, GameData>();
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM gameData";
+            try (var ps = conn.prepareStatement(statement)) {
+                try (var rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        var gameData = readGameData(rs);
+                        games.put(gameData.gameID(), gameData);
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+        return games;
     }
 
     private GameData readGameData(ResultSet rs) throws SQLException {
