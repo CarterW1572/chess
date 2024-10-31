@@ -4,6 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -54,6 +55,21 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public GameData findGame(int gameID) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()){
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game" +
+                    " FROM gameData WHERE gameID=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, gameID);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readGameData(rs);
+                    }
+                }
+            }
+        }
+        catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
         return null;
     }
 
@@ -65,6 +81,16 @@ public class SQLGameDAO implements GameDAO {
     @Override
     public HashMap<Integer, GameData> getAllGames() throws DataAccessException {
         return null;
+    }
+
+    private GameData readGameData(ResultSet rs) throws SQLException {
+        var gameID = rs.getInt("gameID");
+        var whiteUsername = rs.getString("whiteUsername");
+        var blackUsername = rs.getString("blackUsername");
+        var gameName = rs.getString("gameName");
+        var game = rs.getString("game");
+        var chessGame = new Gson().fromJson(game, ChessGame.class);
+        return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
     }
 
     private void executeUpdate(String statement, Object... params) throws DataAccessException {
