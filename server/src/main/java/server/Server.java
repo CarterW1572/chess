@@ -27,8 +27,14 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", (req, res) -> {
-            res.status(200);
-            return handler.clear();
+            try {
+                res.status(200);
+                return handler.clear();
+            }
+            catch (DataAccessException e) {
+                res.status(500);
+                return e.getMessage();
+            }
         });
 
         Spark.post("/user", (req, res) -> {
@@ -40,7 +46,7 @@ public class Server {
                 res.status(400);
                 return e.getMessage();
             }
-            catch (DataAccessException e) {
+            catch (DataAccessException e) { // may need to change
                 res.status(403);
                 return e.getMessage();
             }
@@ -70,6 +76,10 @@ public class Server {
                 res.status(401);
                 return e.getMessage();
             }
+            catch (DataAccessException e) {
+                res.status(500);
+                return e.getMessage();
+            }
         });
 
         Spark.get("/game", (req, res) -> {
@@ -79,6 +89,10 @@ public class Server {
             }
             catch (UnauthorizedException e) {
                 res.status(401);
+                return e.getMessage();
+            }
+            catch (DataAccessException e) {
+                res.status(500);
                 return e.getMessage();
             }
         });
@@ -96,6 +110,10 @@ public class Server {
                 res.status(401);
                 return e.getMessage();
             }
+            catch (DataAccessException e) {
+                res.status(500);
+                return e.getMessage();
+            }
         });
 
         Spark.put("/game", (req, res) -> {
@@ -111,7 +129,7 @@ public class Server {
                 res.status(401);
                 return e.getMessage();
             }
-            catch (DataAccessException e) {
+            catch (DataAccessException e) { // may need to change
                 res.status(403);
                 return e.getMessage();
             }
