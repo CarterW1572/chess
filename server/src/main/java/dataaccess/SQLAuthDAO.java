@@ -8,6 +8,16 @@ import dataaccess.SQLUserDAO;
 import model.UserData;
 
 public class SQLAuthDAO implements AuthDAO {
+
+    public SQLAuthDAO() {
+        try {
+            configureDatabase();
+        }
+        catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     @Override
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE authData";
@@ -23,13 +33,28 @@ public class SQLAuthDAO implements AuthDAO {
     }
 
     @Override
-    public AuthData findAuthData(String authToken) {
+    public AuthData findAuthData(String authToken) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()){
+            var statement = "SELECT authToken, username FROM userData WHERE authToken=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, authToken);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readAuthData(rs);
+                    }
+                }
+            }
+        }
+        catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
         return null;
     }
 
     @Override
-    public void deleteAuthData(String authToken) {
-
+    public void deleteAuthData(String authToken) throws DataAccessException {
+        var statement = "DELETE FROM authData WHERE authToken=?";
+        SQLUserDAO.executeUpdate(statement, authToken);
     }
 
     private AuthData readAuthData(ResultSet rs) throws SQLException {
