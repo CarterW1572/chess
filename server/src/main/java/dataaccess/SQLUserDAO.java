@@ -57,7 +57,7 @@ public class SQLUserDAO implements UserDAO {
         return new UserData(username, password, email);
     }
 
-    private void executeUpdate(String statement, Object... params) throws DataAccessException {
+    public static void executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement)) {
                 for (var i = 0; i < params.length; i++) {
@@ -79,7 +79,7 @@ public class SQLUserDAO implements UserDAO {
               `password` varchar(256) NOT NULL,
               `email` varchar(256) NOT NULL,
               PRIMARY KEY (`username`),
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
             """
     };
 

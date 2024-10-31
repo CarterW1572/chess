@@ -31,13 +31,13 @@ public class Handler {
         return serializer.toJson(authData);
     }
 
-    public Object login(Request req) throws UnauthorizedException {
+    public Object login(Request req) throws UnauthorizedException, DataAccessException {
         var loginReq = serializer.fromJson(req.body(), LoginRequest.class);
         AuthData authData = userService.login(loginReq);
         return serializer.toJson(authData);
     }
 
-    public Object logout(Request req) throws UnauthorizedException {
+    public Object logout(Request req) throws UnauthorizedException, DataAccessException {
         var authToken = req.headers("authorization"); /*serializer.fromJson(req.headers("authorization"), String.class);*/
         userService.logout(authToken);
         return "{}";

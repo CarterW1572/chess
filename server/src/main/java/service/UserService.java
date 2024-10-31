@@ -48,7 +48,7 @@ public class UserService {
         }
     }
 
-    public AuthData login(LoginRequest loginReq) {
+    public AuthData login(LoginRequest loginReq) throws DataAccessException {
         if (userDAO.findUserData(loginReq.username()) != null &&
             userDAO.findUserData(loginReq.username()).password().equals(loginReq.password())) {
             String authToken = generateAuthToken();
@@ -59,7 +59,7 @@ public class UserService {
         throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
     }
 
-    public void logout(String authToken) {
+    public void logout(String authToken) throws DataAccessException {
         if (authDAO.findAuthData(authToken) == null) {
             throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
         }

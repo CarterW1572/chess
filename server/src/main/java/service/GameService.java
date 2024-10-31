@@ -28,7 +28,7 @@ public class GameService {
         this.authDAO = authDAO;
     }
 
-    public CreateGameResult createGame(String authToken, CreateGameRequest createGameRequest) throws UnauthorizedException {
+    public CreateGameResult createGame(String authToken, CreateGameRequest createGameRequest) throws UnauthorizedException, DataAccessException {
         if (authDAO.findAuthData(authToken) == null) {
             throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
         }
@@ -56,7 +56,7 @@ public class GameService {
         gameDAO.updateGame(joinGameRequest.gameID(), authDAO.findAuthData(authToken).username(), joinGameRequest.playerColor());
     }
 
-    public ArrayList<ListGameResult> listGames(String authToken) {
+    public ArrayList<ListGameResult> listGames(String authToken) throws DataAccessException {
         if (authDAO.findAuthData(authToken) == null) {
             throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
         }

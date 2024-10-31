@@ -64,7 +64,7 @@ public class ServiceTests {
         try {
             userService.login(new LoginRequest("username", "password"));
         }
-        catch (UnauthorizedException e) {
+        catch (UnauthorizedException | DataAccessException e) {
             Assertions.fail();
         }
     }
@@ -74,7 +74,7 @@ public class ServiceTests {
         try {
             userService.login(new LoginRequest("username", "notPassword"));
         }
-        catch (UnauthorizedException e) {
+        catch (UnauthorizedException | DataAccessException e) {
             Assertions.assertTrue(true);
         }
     }
@@ -84,7 +84,7 @@ public class ServiceTests {
         try {
             userService.logout(authData.authToken());
         }
-        catch (UnauthorizedException e) {
+        catch (UnauthorizedException | DataAccessException e) {
             Assertions.fail();
         }
     }
@@ -94,7 +94,7 @@ public class ServiceTests {
         try {
             userService.logout("not correct authToken");
         }
-        catch (UnauthorizedException e) {
+        catch (UnauthorizedException | DataAccessException e) {
             Assertions.assertTrue(true);
         }
     }
@@ -105,7 +105,7 @@ public class ServiceTests {
             CreateGameRequest req = new CreateGameRequest("game");
             gameService.createGame(authData.authToken(), req);
         }
-        catch (UnauthorizedException | BadRequestException e) {
+        catch (UnauthorizedException | BadRequestException | DataAccessException e) {
             Assertions.fail();
         }
     }
@@ -116,7 +116,7 @@ public class ServiceTests {
             CreateGameRequest req = new CreateGameRequest("game");
             gameService.createGame("fake auth token", req);
         }
-        catch (UnauthorizedException | BadRequestException e) {
+        catch (UnauthorizedException | BadRequestException | DataAccessException e) {
             Assertions.assertTrue(true);
         }
     }
@@ -154,7 +154,7 @@ public class ServiceTests {
             gameService.createGame(authData.authToken(), req);
             gameService.listGames(authData.authToken());
         }
-        catch (UnauthorizedException e) {
+        catch (UnauthorizedException | DataAccessException e) {
             Assertions.fail();
         }
     }
@@ -166,7 +166,7 @@ public class ServiceTests {
             gameService.createGame(authData.authToken(), req);
             gameService.listGames("authData.authToken()");
         }
-        catch (UnauthorizedException e) {
+        catch (UnauthorizedException | DataAccessException e) {
             Assertions.assertTrue(true);
         }
     }
