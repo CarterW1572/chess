@@ -25,7 +25,7 @@ public class Client {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "login" -> login(params);
-//                case "register" -> register(params);
+                case "register" -> register(params);
 //                case "list" -> listGames();
 //                case "logout" -> logout();
 //                case "create" -> createGame(params);
@@ -38,10 +38,19 @@ public class Client {
         }
     }
 
+    public String register(String... params) throws ResponseException {
+        if (params.length >= 3) {
+            AuthData res = server.register(params[0], params[1], params[2]);
+            state = State.LOGGEDIN;
+            return "You are registered and logged in as " + res.username();
+        }
+        throw new ResponseException(400, "Expected: <username> <password> <email>");
+    }
+
     public String login(String... params) throws ResponseException {
         if (params.length >= 2) {
-            state = State.LOGGEDIN;
             AuthData res = server.login(params[0], params[1]);
+            state = State.LOGGEDIN;
             return "You are logged in as " + res.username();
         }
         throw new ResponseException(400, "Expected: <username> <password>");
@@ -50,15 +59,15 @@ public class Client {
     public String help() {
         if (state == State.LOGGEDOUT) {
             return """
-                    - login <username> <password>
                     - register <username> <password> <email>
+                    - login <username> <password>
                     - quit
                     - help
                     """;
         }
         return """
-                - list
                 - create <name>
+                - list
                 - join <ID> [WHITE | BLACK]
                 - observe <ID>
                 - logout

@@ -13,6 +13,12 @@ public class ServerFacade {
         serverUrl = url;
     }
 
+    public AuthData register(String username, String password, String email) {
+        var path = "/user";
+        UserData req = new UserData(username, password, email);
+        return this.makeRequest("POST", path, req, AuthData.class);
+    }
+
     public AuthData login(String username, String password) throws ResponseException {
         var path = "/session";
         LoginRequest req = new LoginRequest(username, password);
