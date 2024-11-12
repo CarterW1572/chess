@@ -27,7 +27,7 @@ public class Client {
                 case "login" -> login(params);
                 case "register" -> register(params);
 //                case "list" -> listGames();
-//                case "logout" -> logout();
+                case "logout" -> logout();
 //                case "create" -> createGame(params);
 //                case "observe" -> observeGame();
                 case "quit" -> "quit";
@@ -54,6 +54,12 @@ public class Client {
             return "You are logged in as " + res.username();
         }
         throw new ResponseException(400, "Expected: <username> <password>");
+    }
+
+    public String logout() throws ResponseException {
+        server.logout();
+        state = State.LOGGEDOUT;
+        return "You are logged out";
     }
 
     public String help() {

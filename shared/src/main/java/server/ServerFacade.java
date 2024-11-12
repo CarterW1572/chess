@@ -8,6 +8,7 @@ import java.net.*;
 
 public class ServerFacade {
     private final String serverUrl;
+    private AuthData authData;
 
     public ServerFacade(String url) {
         serverUrl = url;
@@ -16,13 +17,20 @@ public class ServerFacade {
     public AuthData register(String username, String password, String email) {
         var path = "/user";
         UserData req = new UserData(username, password, email);
-        return this.makeRequest("POST", path, req, AuthData.class);
+        authData = this.makeRequest("POST", path, req, AuthData.class);
+        return authData;
     }
 
     public AuthData login(String username, String password) throws ResponseException {
         var path = "/session";
         LoginRequest req = new LoginRequest(username, password);
-        return this.makeRequest("POST", path, req, AuthData.class);
+        authData = this.makeRequest("POST", path, req, AuthData.class);
+        return authData;
+    }
+
+    public void logout() {
+        var path = "/session";
+        this.makeRequest("DELETE", path, authData.authToken(), String.class);
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
