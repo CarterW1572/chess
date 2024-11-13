@@ -28,7 +28,7 @@ public class Client {
                 case "register" -> register(params);
 //                case "list" -> listGames();
                 case "logout" -> logout();
-//                case "create" -> createGame(params);
+                case "create" -> createGame(params);
 //                case "observe" -> observeGame();
                 case "quit" -> "quit";
                 default -> help();
@@ -62,14 +62,22 @@ public class Client {
         return "You are logged out";
     }
 
+    public String createGame(String... params) throws ResponseException {
+        StringBuilder name = new StringBuilder();
+        for (int i = 0; i < params.length; i++) {
+            name.append(params[i]);
+        }
+        server.createGame(name.toString());
+        return "Game created";
+    }
+
     public String help() {
         if (state == State.LOGGEDOUT) {
             return """
                     - register <username> <password> <email>
                     - login <username> <password>
                     - quit
-                    - help
-                    """;
+                    - help""";
         }
         return """
                 - create <name>
@@ -78,7 +86,6 @@ public class Client {
                 - observe <ID>
                 - logout
                 - quit
-                - help
-                """;
+                - help""";
     }
 }

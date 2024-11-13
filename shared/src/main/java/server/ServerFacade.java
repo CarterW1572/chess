@@ -17,30 +17,36 @@ public class ServerFacade {
     public AuthData register(String username, String password, String email) {
         var path = "/user";
         UserData req = new UserData(username, password, email);
-        authData = this.makeRequest("POST", path, req, AuthData.class);
+        authData = this.makeRequest("POST", path, req, AuthData.class, null);
         return authData;
     }
 
     public AuthData login(String username, String password) throws ResponseException {
         var path = "/session";
         LoginRequest req = new LoginRequest(username, password);
-        authData = this.makeRequest("POST", path, req, AuthData.class);
+        authData = this.makeRequest("POST", path, req, AuthData.class, null);
         return authData;
     }
 
     public void logout() {
         var path = "/session";
-        this.makeRequest("DELETE", path, authData.authToken(), String.class);
+        this.makeRequest("DELETE", path, null, null, authData.authToken());
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
+    public void createGame(String name) {
+        var path = "/game";
+        CreateGameRequest req = new CreateGameRequest(name);
+        this.makeRequest("POST", path, req, null, authData.authToken());
+    }
+
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String header) throws ResponseException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
 
-            writeBody(request, http);
+            writeBody(request, http, header);
             http.connect();
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
@@ -49,8 +55,10 @@ public class ServerFacade {
         }
     }
 
-
-    private static void writeBody(Object request, HttpURLConnection http) throws IOException {
+    private static void writeBody(Object request, HttpURLConnection http, String header) throws IOException {
+        if (header != null) {
+            http.addRequestProperty("Authorization", header);
+        }
         if (request != null) {
             http.addRequestProperty("Content-Type", "application/json");
             String reqData = new Gson().toJson(request);
