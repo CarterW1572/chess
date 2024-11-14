@@ -92,6 +92,9 @@ public class Client {
     }
 
     public String joinGame(String... params) throws ResponseException {
+        if (params.length < 2) {
+            throw new ResponseException(400, "Expected: <ID> [WHITE | BLACK]");
+        }
         int gameNum;
         ChessGame.TeamColor color;
         try {
@@ -115,6 +118,9 @@ public class Client {
     }
 
     public String observeGame(String... params) throws ResponseException {
+        if (params.length < 1) {
+            throw new ResponseException(400, "Expected: <ID>");
+        }
         int gameNum;
         try {
             gameNum = Integer.valueOf(params[0]);
@@ -132,9 +138,13 @@ public class Client {
     }
 
     public String createGame(String... params) throws ResponseException {
+        if (params.length < 1) {
+            throw new ResponseException(400, "Expected: <name>");
+        }
         StringBuilder name = new StringBuilder();
-        for (int i = 0; i < params.length; i++) {
-            name.append(params[i]);
+        name.append(params[0]);
+        for (int i = 1; i < params.length; i++) {
+            name.append(" " + params[i]);
         }
         server.createGame(name.toString());
         return "Game created";
