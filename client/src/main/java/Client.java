@@ -1,3 +1,4 @@
+import chess.ChessGame;
 import com.google.gson.Gson;
 import model.*;
 
@@ -34,10 +35,11 @@ public class Client {
             return switch (cmd) {
                 case "login" -> login(params);
                 case "register" -> register(params);
-                case "list" -> listGames();
-                case "logout" -> logout();
                 case "create" -> createGame(params);
+                case "list" -> listGames();
+                case "join" -> joinGame(params);
 //                case "observe" -> observeGame();
+                case "logout" -> logout();
                 case "quit" -> "quit";
                 default -> help();
             };
@@ -83,7 +85,33 @@ public class Client {
             gameList.append((i+1) + " - " + name + ": [white : " + white + "], [black : " + black + "]\n");
             currentGameNumbers.put(i+1, gameID);
         }
+        if (gameList.charAt(gameList.length() - 1) == '\n') {
+            gameList.deleteCharAt(gameList.length() - 1);
+        }
         return gameList.toString();
+    }
+
+    public String joinGame(String... params) throws ResponseException {
+        int gameNum;
+        ChessGame.TeamColor color;
+        try {
+            gameNum = Integer.valueOf(params[0]);
+        }
+        catch (NumberFormatException e) {
+            return "Not a valid game ID";
+        }
+        if (params[1].equalsIgnoreCase("white")) {
+            color = ChessGame.TeamColor.WHITE;
+        }
+        else if (params[1].equalsIgnoreCase("black")) {
+            color = ChessGame.TeamColor.BLACK;
+        }
+        else {
+            return "Invalid team color";
+        }
+        int gameID = currentGameNumbers.get(gameNum);
+        server.joinGame(gameID, color);
+        return "Successfully joined game as " + color;
     }
 
     public String logout() throws ResponseException {

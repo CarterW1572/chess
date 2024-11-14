@@ -1,5 +1,6 @@
 package server;
 
+import chess.ChessGame;
 import requests.*;
 import model.*;
 import com.google.gson.Gson;
@@ -33,6 +34,12 @@ public class ServerFacade {
     public ListGamesResult listGames() {
         var path = "/game";
         return this.makeRequest("GET", path, null, ListGamesResult.class, authData.authToken());
+    }
+
+    public void joinGame(int gameID, ChessGame.TeamColor color) {
+        var path = "/game";
+        JoinGameRequest req = new JoinGameRequest(color, gameID);
+        this.makeRequest("PUT", path, req, null, authData.authToken());
     }
 
     public void logout() {
@@ -78,7 +85,18 @@ public class ServerFacade {
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, ResponseException {
         var status = http.getResponseCode();
         if (!isSuccessful(status)) {
-            throw new ResponseException(status, "failure: " + status);
+            if (status == 400) {
+                throw new ResponseException(status, "failure: bad request");
+            }
+            else if (status == 401) {
+                throw new ResponseException(status, "failure: unauthorized");
+            }
+            else if (status == 403) {
+                throw new ResponseException(status, "failure: invalid");
+            }
+            else {
+                throw new ResponseException(status, "failure");
+            }
         }
     }
 
