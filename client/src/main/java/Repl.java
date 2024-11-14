@@ -29,7 +29,6 @@ public class Repl {
                 System.out.println(msg);
             }
         }
-        System.out.println();
     }
 
 //    public void notify(Notification notification) {

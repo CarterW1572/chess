@@ -5,6 +5,7 @@ import model.*;
 import results.ListGameResult;
 import server.ResponseException;
 import server.ServerFacade;
+import ui.DisplayBoard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,6 +115,7 @@ public class Client {
         }
         int gameID = currentGameNumbers.get(gameNum);
         server.joinGame(gameID, color);
+        DisplayBoard.display();
         return "Successfully joined game as " + color;
     }
 
@@ -128,6 +130,7 @@ public class Client {
         catch (NumberFormatException e) {
             return "Not a valid game ID";
         }
+        DisplayBoard.display();
         return "You are observing game " + gameNum;
     }
 
