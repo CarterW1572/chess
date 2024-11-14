@@ -46,11 +46,18 @@ public class Client {
                 case "observe" -> observeGame(params);
                 case "logout" -> logout();
                 case "quit" -> "quit";
+                case "test" -> test();
                 default -> help();
             };
         } catch (ResponseException ex) {
             return ex.getMessage();
         }
+    }
+
+    public String test() {
+        ChessBoard board = new ChessBoard();
+        board.resetBoard();
+        return display.test(board);
     }
 
     public String register(String... params) throws ResponseException {
@@ -120,6 +127,7 @@ public class Client {
         int gameID = currentGameNumbers.get(gameNum);
         server.joinGame(gameID, color);
         ChessBoard board = new ChessBoard();
+        board.resetBoard();
         display.display(board);
         Scanner scanner = new Scanner(System.in);
         var result = "";
@@ -148,6 +156,7 @@ public class Client {
             return "Not a valid game ID";
         }
         ChessBoard board = new ChessBoard();
+        board.resetBoard();
         display.display(board);
         Scanner scanner = new Scanner(System.in);
         var result = "";

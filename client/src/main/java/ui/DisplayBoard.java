@@ -14,10 +14,21 @@ public class DisplayBoard {
         StringBuilder sb = new StringBuilder();
         sb.append(this.topBorder());
         sb.append(this.middle(board));
+        sb.append(this.bottomBorder());
         System.out.println(sb);
     }
 
+    public String test(ChessBoard board) {
+        return convertPiece(board.getPiece(new ChessPosition(1,   1)).getPieceType());
+    }
+
     private String topBorder() {
+        return EscapeSequences.SET_BG_COLOR_MAGENTA + EscapeSequences.SET_TEXT_COLOR_BLACK +
+                "    h  g  f  e  d  c  b  a    " + EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR +
+                "\n";
+    }
+
+    private String bottomBorder() {
         return EscapeSequences.SET_BG_COLOR_MAGENTA + EscapeSequences.SET_TEXT_COLOR_BLACK +
                 "    h  g  f  e  d  c  b  a    " + EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR +
                 "\n";
