@@ -18,10 +18,6 @@ public class DisplayBoard {
         System.out.println(sb);
     }
 
-    public String test(ChessBoard board) {
-        return convertPiece(board.getPiece(new ChessPosition(1,   1)).getPieceType());
-    }
-
     private String topBorder() {
         return EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK +
                 "    h  g  f  e  d  c  b  a    " + EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR +

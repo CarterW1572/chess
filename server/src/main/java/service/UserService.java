@@ -53,8 +53,7 @@ public class UserService {
 
     public AuthData login(LoginRequest loginReq) throws DataAccessException {
         if (userDAO.findUserData(loginReq.username()) != null &&
-                BCrypt.checkpw(loginReq.password(), userDAO.findUserData(loginReq.username()).password())
-                /*userDAO.findUserData(loginReq.username()).password().equals(loginReq.password())*/) {
+                BCrypt.checkpw(loginReq.password(), userDAO.findUserData(loginReq.username()).password())) {
             String authToken = generateAuthToken();
             var authData = new AuthData(authToken, loginReq.username());
             authDAO.addAuthData(authData);
