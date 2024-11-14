@@ -10,6 +10,7 @@ import ui.DisplayBoard;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Client {
     private Repl notificationHandler;
@@ -116,6 +117,18 @@ public class Client {
         int gameID = currentGameNumbers.get(gameNum);
         server.joinGame(gameID, color);
         DisplayBoard.display();
+        Scanner scanner = new Scanner(System.in);
+        var result = "";
+        while (!result.equals("You left the game") || !result.equals("You have resigned")) {
+            String line = scanner.nextLine();
+
+            try {
+                result = playEval(line);
+                return result;
+            } catch (ResponseException e) {
+                System.out.println(e.getMessage());
+            }
+        }
         return "Successfully joined game as " + color;
     }
 
@@ -131,6 +144,18 @@ public class Client {
             return "Not a valid game ID";
         }
         DisplayBoard.display();
+        Scanner scanner = new Scanner(System.in);
+        var result = "";
+        while (!result.equals("You left the game")) {
+            String line = scanner.nextLine();
+
+            try {
+                result = observeEval(line);
+                return result;
+            } catch (ResponseException e) {
+                System.out.println(e.getMessage());
+            }
+        }
         return "You are observing game " + gameNum;
     }
 
@@ -169,5 +194,26 @@ public class Client {
                 - logout
                 - quit
                 - help""";
+    }
+
+    private String playEval(String input) {
+        if (input.equalsIgnoreCase("leave")) {
+            return "You left the game";
+        }
+        else if (input.equalsIgnoreCase("resign")) {
+            return "You have resigned";
+        }
+        else {
+            throw new ResponseException(400, "Invalid input");
+        }
+    }
+
+    private String observeEval(String input) {
+        if (input.equalsIgnoreCase("leave")) {
+            return "You left the game";
+        }
+        else {
+            throw new ResponseException(400, "Invalid input");
+        }
     }
 }
