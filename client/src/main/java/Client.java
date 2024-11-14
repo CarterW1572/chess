@@ -1,3 +1,4 @@
+import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.*;
@@ -19,6 +20,7 @@ public class Client {
     private State state;
     private final Gson serializer;
     private HashMap<Integer, Integer> currentGameNumbers;
+    private DisplayBoard display;
 
     public Client(String serverUrl, Repl notificationHandler) {
         server = new ServerFacade(serverUrl);
@@ -26,6 +28,7 @@ public class Client {
         this.notificationHandler = notificationHandler;
         serializer = new Gson();
         currentGameNumbers = new HashMap<>();
+        display = new DisplayBoard();
         state = State.LOGGEDOUT;
     }
 
@@ -116,7 +119,8 @@ public class Client {
         }
         int gameID = currentGameNumbers.get(gameNum);
         server.joinGame(gameID, color);
-        DisplayBoard.display();
+        ChessBoard board = new ChessBoard();
+        display.display(board);
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("You left the game") || !result.equals("You have resigned")) {
@@ -143,7 +147,8 @@ public class Client {
         catch (NumberFormatException e) {
             return "Not a valid game ID";
         }
-        DisplayBoard.display();
+        ChessBoard board = new ChessBoard();
+        display.display(board);
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("You left the game")) {
