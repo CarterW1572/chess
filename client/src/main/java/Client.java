@@ -13,6 +13,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import static ui.EscapeSequences.*;
+import static ui.EscapeSequences.RESET_TEXT_BOLD_FAINT;
+
 public class Client {
     private Repl notificationHandler;
     private String serverUrl;
@@ -21,6 +24,7 @@ public class Client {
     private final Gson serializer;
     private HashMap<Integer, Integer> currentGameNumbers;
     private DisplayBoard display;
+    private String currentUser;
 
     public Client(String serverUrl, Repl notificationHandler) {
         server = new ServerFacade(serverUrl);
@@ -30,6 +34,15 @@ public class Client {
         currentGameNumbers = new HashMap<>();
         display = new DisplayBoard();
         state = State.LOGGEDOUT;
+        currentUser = null;
+    }
+
+    public State getStatus() {
+        return state;
+    }
+
+    public String getUser() {
+        return currentUser;
     }
 
     public String eval(String input) {
@@ -42,7 +55,8 @@ public class Client {
                     case "login" -> login(params);
                     case "register" -> register(params);
                     case "quit" -> "quit";
-                    default -> help();
+                    case "help" -> help();
+                    default -> "Invalid request. Here are your options:\n" + help();
                 };
             }
             else {
@@ -53,7 +67,8 @@ public class Client {
                     case "observe" -> observeGame(params);
                     case "logout" -> logout();
                     case "quit" -> "quit";
-                    default -> help();
+                    case "help" -> help();
+                    default -> "Invalid request. Here are your options:\n" + help();
                 };
             }
         } catch (ResponseException ex) {
@@ -62,18 +77,20 @@ public class Client {
     }
 
     public String register(String... params) throws ResponseException {
-        if (params.length >= 3) {
+        if (params.length == 3) {
             AuthData res = server.register(params[0], params[1], params[2]);
             state = State.LOGGEDIN;
+            currentUser = params[0];
             return "You are registered and logged in as " + res.username();
         }
         throw new ResponseException(400, "Expected: <username> <password> <email>");
     }
 
     public String login(String... params) throws ResponseException {
-        if (params.length >= 2) {
+        if (params.length == 2) {
             AuthData res = server.login(params[0], params[1]);
             state = State.LOGGEDIN;
+            currentUser = params[0];
             return "You are logged in as " + res.username();
         }
         throw new ResponseException(400, "Expected: <username> <password>");
@@ -105,7 +122,7 @@ public class Client {
     }
 
     public String joinGame(String... params) throws ResponseException {
-        if (params.length < 2) {
+        if (params.length != 2) {
             throw new ResponseException(400, "Expected: <ID> [WHITE | BLACK]");
         }
         int gameNum;
@@ -130,10 +147,12 @@ public class Client {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         display.display(board);
-        System.out.println("- leave\n- resign");
+        System.out.println("Options:\n- leave\n- resign");
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("You left the game") || !result.equals("You have resigned")) {
+            System.out.print(SET_TEXT_BOLD + SET_TEXT_ITALIC + "[INGAME] >>> " + RESET_TEXT_ITALIC +
+                    RESET_TEXT_BOLD_FAINT);
             String line = scanner.nextLine();
 
             try {
@@ -147,7 +166,7 @@ public class Client {
     }
 
     public String observeGame(String... params) throws ResponseException {
-        if (params.length < 1) {
+        if (params.length != 1) {
             throw new ResponseException(400, "Expected: <ID>");
         }
         int gameNum;
@@ -160,10 +179,12 @@ public class Client {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         display.display(board);
-        System.out.println("- leave");
+        System.out.println("Options:\n- leave");
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("You left the game")) {
+            System.out.print(SET_TEXT_BOLD + SET_TEXT_ITALIC + "[OBSERVING] >>> " + RESET_TEXT_ITALIC +
+                    RESET_TEXT_BOLD_FAINT);
             String line = scanner.nextLine();
 
             try {
@@ -179,6 +200,7 @@ public class Client {
     public String logout() throws ResponseException {
         server.logout();
         state = State.LOGGEDOUT;
+        currentUser = null;
         return "You are logged out";
     }
 
