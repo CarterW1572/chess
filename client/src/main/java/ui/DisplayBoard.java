@@ -23,13 +23,13 @@ public class DisplayBoard {
     }
 
     private String topBorder() {
-        return EscapeSequences.SET_BG_COLOR_MAGENTA + EscapeSequences.SET_TEXT_COLOR_BLACK +
+        return EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK +
                 "    h  g  f  e  d  c  b  a    " + EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR +
                 "\n";
     }
 
     private String bottomBorder() {
-        return EscapeSequences.SET_BG_COLOR_MAGENTA + EscapeSequences.SET_TEXT_COLOR_BLACK +
+        return EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK +
                 "    h  g  f  e  d  c  b  a    " + EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR +
                 "\n";
     }
@@ -37,31 +37,31 @@ public class DisplayBoard {
     private String middle(ChessBoard board) {
         StringBuilder sb = new StringBuilder();
         for (int j = 0; j < 8; j++) {
-            sb.append(EscapeSequences.SET_BG_COLOR_MAGENTA + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (j+1) + " ");
+            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (j+1) + " ");
             for (int i = 0; i < 8; i++) {
                 if ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1)) {
-                    sb.append(whiteSquare(board, i));
+                    sb.append(whiteSquare(board, i, j));
                 }
                 else {
-                    sb.append(blackSquare(board, i));
+                    sb.append(blackSquare(board, i, j));
                 }
             }
-            sb.append(EscapeSequences.SET_BG_COLOR_MAGENTA + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (j+1) + " " +
+            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (j+1) + " " +
                     EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR + "\n");
         }
         return sb.toString();
     }
 
-    private String whiteSquare(ChessBoard board, int i) {
+    private String whiteSquare(ChessBoard board, int i, int j) {
         StringBuilder sb = new StringBuilder();
-        if (board.getPiece(new ChessPosition(1, i + 1)) != null) {
-            if (board.getPiece(new ChessPosition(1, i + 1)).getTeamColor() == ChessGame.TeamColor.WHITE) {
+        if (board.getPiece(new ChessPosition(j + 1, i + 1)) != null) {
+            if (board.getPiece(new ChessPosition(j + 1, i + 1)).getTeamColor() == ChessGame.TeamColor.WHITE) {
                 sb.append(EscapeSequences.SET_BG_COLOR_WHITE + EscapeSequences.SET_TEXT_COLOR_BLUE + " " +
-                        convertPiece(board.getPiece(new ChessPosition(1, i + 1)).getPieceType()) + " ");
+                        convertPiece(board.getPiece(new ChessPosition(j + 1, i + 1)).getPieceType()) + " ");
             }
             else {
                 sb.append(EscapeSequences.SET_BG_COLOR_WHITE + EscapeSequences.SET_TEXT_COLOR_RED + " " +
-                        convertPiece(board.getPiece(new ChessPosition(1, i + 1)).getPieceType()) + " ");
+                        convertPiece(board.getPiece(new ChessPosition(j + 1, i + 1)).getPieceType()) + " ");
             }
         }
         else {
@@ -70,16 +70,16 @@ public class DisplayBoard {
         return sb.toString();
     }
 
-    private String blackSquare(ChessBoard board, int i) {
+    private String blackSquare(ChessBoard board, int i, int j) {
         StringBuilder sb = new StringBuilder();
-        if (board.getPiece(new ChessPosition(1, i + 1)) != null) {
-            if (board.getPiece(new ChessPosition(1, i + 1)).getTeamColor() == ChessGame.TeamColor.WHITE) {
+        if (board.getPiece(new ChessPosition(j + 1, i + 1)) != null) {
+            if (board.getPiece(new ChessPosition(j + 1, i + 1)).getTeamColor() == ChessGame.TeamColor.WHITE) {
                 sb.append(EscapeSequences.SET_BG_COLOR_BLACK + EscapeSequences.SET_TEXT_COLOR_BLUE + " " +
-                        convertPiece(board.getPiece(new ChessPosition(1, i + 1)).getPieceType()) + " ");
+                        convertPiece(board.getPiece(new ChessPosition(j + 1, i + 1)).getPieceType()) + " ");
             }
             else {
                 sb.append(EscapeSequences.SET_BG_COLOR_BLACK + EscapeSequences.SET_TEXT_COLOR_RED + " " +
-                        convertPiece(board.getPiece(new ChessPosition(1, i + 1)).getPieceType()) + " ");
+                        convertPiece(board.getPiece(new ChessPosition(j + 1, i + 1)).getPieceType()) + " ");
             }
         }
         else {
