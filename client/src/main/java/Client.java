@@ -38,7 +38,7 @@ public class Client {
                 case "create" -> createGame(params);
                 case "list" -> listGames();
                 case "join" -> joinGame(params);
-//                case "observe" -> observeGame();
+                case "observe" -> observeGame(params);
                 case "logout" -> logout();
                 case "quit" -> "quit";
                 default -> help();
@@ -112,6 +112,17 @@ public class Client {
         int gameID = currentGameNumbers.get(gameNum);
         server.joinGame(gameID, color);
         return "Successfully joined game as " + color;
+    }
+
+    public String observeGame(String... params) throws ResponseException {
+        int gameNum;
+        try {
+            gameNum = Integer.valueOf(params[0]);
+        }
+        catch (NumberFormatException e) {
+            return "Not a valid game ID";
+        }
+        return "You are observing game " + gameNum;
     }
 
     public String logout() throws ResponseException {
