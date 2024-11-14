@@ -1,3 +1,5 @@
+import ui.EscapeSequences;
+
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -10,8 +12,8 @@ public class Repl {
     }
 
     public void run() {
-        System.out.println("\uD83D\uDC36 Welcome to chess. Sign in to start.");
-        System.out.print(client.help());
+        System.out.println(EscapeSequences.WHITE_KING + " Welcome to chess. Sign in to start. " + EscapeSequences.WHITE_KING);
+        System.out.println(client.help());
 
         Scanner scanner = new Scanner(System.in);
         var result = "";

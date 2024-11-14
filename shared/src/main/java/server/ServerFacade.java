@@ -3,6 +3,8 @@ package server;
 import requests.*;
 import model.*;
 import com.google.gson.Gson;
+import results.*;
+
 import java.io.*;
 import java.net.*;
 
@@ -26,6 +28,11 @@ public class ServerFacade {
         LoginRequest req = new LoginRequest(username, password);
         authData = this.makeRequest("POST", path, req, AuthData.class, null);
         return authData;
+    }
+
+    public ListGamesResult listGames() {
+        var path = "/game";
+        return this.makeRequest("GET", path, null, ListGamesResult.class, authData.authToken());
     }
 
     public void logout() {

@@ -1,20 +1,28 @@
+import com.google.gson.Gson;
 import model.*;
 
+import results.ListGameResult;
 import server.ResponseException;
 import server.ServerFacade;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Client {
     private Repl notificationHandler;
     private String serverUrl;
     private ServerFacade server;
     private State state;
+    private final Gson serializer;
+    private HashMap<Integer, Integer> currentGameNumbers;
 
     public Client(String serverUrl, Repl notificationHandler) {
         server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
         this.notificationHandler = notificationHandler;
+        serializer = new Gson();
+        currentGameNumbers = new HashMap<>();
         state = State.LOGGEDOUT;
     }
 
@@ -26,7 +34,7 @@ public class Client {
             return switch (cmd) {
                 case "login" -> login(params);
                 case "register" -> register(params);
-//                case "list" -> listGames();
+                case "list" -> listGames();
                 case "logout" -> logout();
                 case "create" -> createGame(params);
 //                case "observe" -> observeGame();
@@ -54,6 +62,28 @@ public class Client {
             return "You are logged in as " + res.username();
         }
         throw new ResponseException(400, "Expected: <username> <password>");
+    }
+
+    public String listGames() throws ResponseException {
+        var list = server.listGames();
+        StringBuilder gameList = new StringBuilder();
+        ArrayList<ListGameResult> games = list.games();
+        currentGameNumbers.clear();
+        for (int i = 0; i < games.size(); i++) {
+            String name = games.get(i).gameName();
+            String white = games.get(i).whiteUsername();
+            String black = games.get(i).blackUsername();
+            int gameID = games.get(i).gameID();
+            if (games.get(i).whiteUsername() == null) {
+                white = "N/A";
+            }
+            if (games.get(i).blackUsername() == null) {
+                black = "N/A";
+            }
+            gameList.append((i+1) + " - " + name + ": [white : " + white + "], [black : " + black + "]\n");
+            currentGameNumbers.put(i+1, gameID);
+        }
+        return gameList.toString();
     }
 
     public String logout() throws ResponseException {
