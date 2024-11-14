@@ -130,6 +130,7 @@ public class Client {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         display.display(board);
+        System.out.println("- leave\n- resign");
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("You left the game") || !result.equals("You have resigned")) {
@@ -159,6 +160,7 @@ public class Client {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         display.display(board);
+        System.out.println("- leave");
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("You left the game")) {
