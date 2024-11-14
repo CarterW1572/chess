@@ -129,6 +129,9 @@ public class Client {
         ChessGame.TeamColor color;
         try {
             gameNum = Integer.valueOf(params[0]);
+            if (!currentGameNumbers.containsKey(gameNum)) {
+                return "Not a vaild game ID";
+            }
         }
         catch (NumberFormatException e) {
             return "Not a valid game ID";

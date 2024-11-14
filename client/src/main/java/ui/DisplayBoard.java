@@ -11,6 +11,7 @@ public class DisplayBoard {
     }
 
     public void display(ChessBoard board) {
+        System.out.print(EscapeSequences.SET_TEXT_BOLD);
         StringBuilder sb = new StringBuilder();
         sb.append(this.topBorder());
         sb.append(this.middle(board));
@@ -21,6 +22,7 @@ public class DisplayBoard {
         sb2.append(this.middleRev(board));
         sb2.append(this.bottomBorderRev());
         System.out.println(sb2);
+        System.out.print(EscapeSequences.RESET_TEXT_BOLD_FAINT);
     }
 
     private String topBorder() {
@@ -50,7 +52,7 @@ public class DisplayBoard {
     private String middle(ChessBoard board) {
         StringBuilder sb = new StringBuilder();
         for (int j = 0; j < 8; j++) {
-            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (j+1) + " ");
+            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (8-j) + " ");
             for (int i = 0; i < 8; i++) {
                 if ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1)) {
                     sb.append(whiteSquare(board, i, j));
@@ -59,7 +61,7 @@ public class DisplayBoard {
                     sb.append(blackSquare(board, i, j));
                 }
             }
-            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (j+1) + " " +
+            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (8-j) + " " +
                     EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR + "\n");
         }
         return sb.toString();
@@ -68,7 +70,7 @@ public class DisplayBoard {
     private String middleRev(ChessBoard board) {
         StringBuilder sb = new StringBuilder();
         for (int j = 0; j < 8; j++) {
-            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (8-j) + " ");
+            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (j+1) + " ");
             for (int i = 0; i < 8; i++) {
                 if ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1)) {
                     sb.append(whiteSquare(board, 7 - i, 7 - j));
@@ -77,7 +79,7 @@ public class DisplayBoard {
                     sb.append(blackSquare(board, 7 - i, 7 - j));
                 }
             }
-            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (8-j) + " " +
+            sb.append(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK + " " + (j+1) + " " +
                     EscapeSequences.RESET_BG_COLOR + EscapeSequences.RESET_TEXT_COLOR + "\n");
         }
         return sb.toString();
