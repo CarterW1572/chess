@@ -20,9 +20,10 @@ public class ServerFacadeTests {
     @BeforeAll
     public static void init() {
         server = new Server();
-        var port = server.run(8080);
+        var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        facade = new ServerFacade("http://localhost:8080");
+        String url = "http://localhost:" + port;
+        facade = new ServerFacade(url);
     }
 
     @BeforeEach
@@ -134,8 +135,10 @@ public class ServerFacadeTests {
 
     @Test
     public void create() {
+        facade.clear();
+        facade.register("username", "password", "email");
         facade.createGame("name");
-        Assertions.assertEquals("name", facade.listGames().games().getLast().gameName());
+        Assertions.assertEquals("name", facade.listGames().games().getFirst().gameName());
     }
 
     @Test
