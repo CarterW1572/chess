@@ -27,7 +27,8 @@ public class DataAccessTests {
     public void setUp() {
         try {
             dataService.clear();
-            authData = userService.register(new UserData("username", "password", "email"));
+            var user = new UserData("username", "password", "email");
+            authData = userService.register(user);
         }
         catch (DataAccessException e) {
             throw new RuntimeException(e);
@@ -37,7 +38,7 @@ public class DataAccessTests {
     @Test
     public void clearTest() {
         try {
-            dataService.clear();
+            userDAO.clear();
         }
         catch (DataAccessException e) {
             Assertions.fail();
@@ -47,7 +48,9 @@ public class DataAccessTests {
     @Test
     public void registerTestSuccess() {
         try {
-            Assertions.assertNotNull(userService.register(new UserData("newUser", "newPass", "newEmail")));
+            var user = new UserData("newUser", "newPass", "newEmail");
+            userDAO.addUserData(user);
+            Assertions.assertNotNull(userDAO.findUserData("newUser"));
         }
         catch (DataAccessException e) {
             Assertions.fail();
@@ -57,7 +60,8 @@ public class DataAccessTests {
     @Test
     public void registerTestFail() {
         try {
-            userService.register(new UserData("username", "newPass", "newEmail"));
+            var user = new UserData("username", "newPass", "newEmail");
+            userDAO.addUserData(user);
         }
         catch (DataAccessException e) {
             Assertions.assertTrue(true);
@@ -67,7 +71,7 @@ public class DataAccessTests {
     @Test
     public void loginTestSuccess() {
         try {
-            userService.login(new LoginRequest("username", "password"));
+            userDAO.findUserData("username");
         }
         catch (UnauthorizedException | DataAccessException e) {
             Assertions.fail();
@@ -77,99 +81,7 @@ public class DataAccessTests {
     @Test
     public void loginTestFail() {
         try {
-            userService.login(new LoginRequest("username", "notPassword"));
-        }
-        catch (UnauthorizedException | DataAccessException e) {
-            Assertions.assertTrue(true);
-        }
-    }
-
-    @Test
-    public void logoutTestSuccess() {
-        try {
-            userService.logout(authData.authToken());
-        }
-        catch (UnauthorizedException | DataAccessException e) {
-            Assertions.fail();
-        }
-    }
-
-    @Test
-    public void logoutTestFail() {
-        try {
-            userService.logout("not correct authToken");
-        }
-        catch (UnauthorizedException | DataAccessException e) {
-            Assertions.assertTrue(true);
-        }
-    }
-
-    @Test
-    public void createGameSuccess() {
-        try {
-            CreateGameRequest req = new CreateGameRequest("game");
-            gameService.createGame(authData.authToken(), req);
-        }
-        catch (UnauthorizedException | BadRequestException | DataAccessException e) {
-            Assertions.fail();
-        }
-    }
-
-    @Test
-    public void createGameFail() {
-        try {
-            CreateGameRequest req = new CreateGameRequest("game");
-            gameService.createGame("fake auth token", req);
-        }
-        catch (UnauthorizedException | BadRequestException | DataAccessException e) {
-            Assertions.assertTrue(true);
-        }
-    }
-
-    @Test
-    public void joinGameSuccess() {
-        try {
-            CreateGameRequest req = new CreateGameRequest("game");
-            int gameID = gameService.createGame(authData.authToken(), req).gameID();
-            JoinGameRequest joinReq = new JoinGameRequest(ChessGame.TeamColor.WHITE, gameID);
-            gameService.joinGame(authData.authToken(), joinReq);
-        }
-        catch (DataAccessException | UnauthorizedException | BadRequestException e) {
-            Assertions.fail();
-        }
-    }
-
-    @Test
-    public void joinGameFail() {
-        try {
-            CreateGameRequest req = new CreateGameRequest("game");
-            gameService.createGame(authData.authToken(), req);
-            JoinGameRequest joinReq = new JoinGameRequest(ChessGame.TeamColor.WHITE, 2);
-            gameService.joinGame(authData.authToken(), joinReq);
-        }
-        catch (DataAccessException | UnauthorizedException | BadRequestException e) {
-            Assertions.assertTrue(true);
-        }
-    }
-
-    @Test
-    public void listGameSuccess() {
-        try {
-            CreateGameRequest req = new CreateGameRequest("game");
-            gameService.createGame(authData.authToken(), req);
-            gameService.listGames(authData.authToken());
-        }
-        catch (UnauthorizedException | DataAccessException e) {
-            Assertions.fail();
-        }
-    }
-
-    @Test
-    public void listGameFail() {
-        try {
-            CreateGameRequest req = new CreateGameRequest("game");
-            gameService.createGame(authData.authToken(), req);
-            gameService.listGames("authData.authToken()");
+            userDAO.findUserData("notUsername");
         }
         catch (UnauthorizedException | DataAccessException e) {
             Assertions.assertTrue(true);

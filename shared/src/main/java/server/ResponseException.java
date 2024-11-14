@@ -7,8 +7,4 @@ public class ResponseException extends RuntimeException {
         super(message);
         this.statusCode = statusCode;
     }
-
-    public int StatusCode() {
-        return statusCode;
-    }
 }

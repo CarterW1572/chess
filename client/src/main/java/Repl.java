@@ -18,7 +18,6 @@ public class Repl {
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("quit")) {
-            //printPrompt();
             String line = scanner.nextLine();
 
             try {
@@ -30,14 +29,4 @@ public class Repl {
             }
         }
     }
-
-//    public void notify(Notification notification) {
-//        System.out.println(RED + notification.message());
-//        printPrompt();
-//    }
-//
-//    private void printPrompt() {
-//        System.out.print("\n" + RESET + ">>> " + GREEN);
-//    }
-
 }

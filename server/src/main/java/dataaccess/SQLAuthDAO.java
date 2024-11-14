@@ -69,18 +69,4 @@ public class SQLAuthDAO implements AuthDAO {
         var username = rs.getString("username");
         return new AuthData(authToken, username);
     }
-
-    /*private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createAuthTable) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        }
-        catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
-        }
-    }*/
 }
